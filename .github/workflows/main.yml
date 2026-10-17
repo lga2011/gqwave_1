@@ -1,0 +1,30 @@
+name: Build Desktop Piano Physical Modeling Simulator
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  watch:
+    types: [ started ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSVC Compiler
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Compile Simulator EXE
+      run: |
+        cl.exe /EHsc /O2 /std:c++17 main.cpp /Fe:PianoSim.exe
+
+    - name: Upload Artifact (Windows x64 Binary)
+      uses: actions/upload-artifact@v4
+      with:
+        name: PianoSim-Windows-x64
+        path: PianoSim.exe
